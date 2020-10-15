@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+var cors = require('cors')
 
 
 const port = 3000;
@@ -10,6 +11,7 @@ const loginRoutes = require('./routes/login.routes');
 require('dotenv').config();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors())
 
 app.use('/api/user', userRoutes);
 
