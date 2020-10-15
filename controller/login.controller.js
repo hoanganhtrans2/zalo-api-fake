@@ -27,9 +27,9 @@ module.exports.login = (req, res) => {
     } else {
       if (!isEmpty(data)) {
         if (data.Item.password === password) res.json(data);
-        else res.status(402).send("Sai tai khoan hoac mat khau");
+        else res.status(200).send("Sai tai khoan hoac mat khau");
       } else {
-        res.status(402).send("Sai tai khoan hoac mat khau");
+        res.status(200).send("Sai tai khoan hoac mat khau");
       }
     }
   });
