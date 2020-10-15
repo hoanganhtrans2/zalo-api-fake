@@ -1,8 +1,12 @@
 var AWS = require("aws-sdk");
+require('dotenv').config();
 AWS.config.update({
   region: "us-east-2",
+  endpoint:"https://dynamodb.us-east-2.amazonaws.com",
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
-var docClient = new AWS.DynamoDB.DocumentClient({ region: "us-east-2" });
+var docClient = new AWS.DynamoDB.DocumentClient({ region: "us-east-2"});
 
 module.exports.getUser = (req, res) => {
   id = req.params.userid;
@@ -15,7 +19,7 @@ module.exports.getUser = (req, res) => {
   };
   docClient.get(params, function (err, data) {
     if (err) {
-      res.status(400).send("Bad Request");
+      res.status(400).send("Bad Request"+ err);
     } else {
       res.json(data);
     }

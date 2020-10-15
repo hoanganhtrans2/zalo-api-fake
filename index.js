@@ -7,6 +7,7 @@ const port = 3000;
 const userRoutes = require('./routes/users.routes');
 const loginRoutes = require('./routes/login.routes');
 
+require('dotenv').config();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
