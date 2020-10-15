@@ -19,7 +19,7 @@ module.exports.getUser = (req, res) => {
   };
   docClient.get(params, function (err, data) {
     if (err) {
-      res.status(400).send("Bad Request"+ err);
+      res.status(200).send(err);
     } else {
       res.json(data);
     }
@@ -46,15 +46,15 @@ module.exports.updateInfo = (req, res) => {
 
   docClient.update(params, function (err, data) {
     if (err) {
-      res.status(400).send("Bad Request!!");
+      res.status(200).send(err);
     } else {
       res.json(data);
     }
   });
 };
 module.exports.register = (req, res) => {
-  const { id, password, birthday, gender, username } = req.body;
 
+  const { id, password, birthday, gender, username } = req.body;
   const promise = new Promise(function (resolve, reject) {
     var params1 = {
       TableName: "user-zalo",
@@ -64,15 +64,15 @@ module.exports.register = (req, res) => {
     };
     docClient.get(params1, function (err, data) {
       if (err) {
-        reject(res.status(400).send(err));
+        reject(res.status(200).send(err));
       } else {
         console.log(data);
         if (isEmpty(data)) {
           resolve(res.status(200));
-          console.log('1empty')
+          console.log('empty');
         }
         else{
-            reject(res.status(400).send("tài khoản đã tồn tại"));
+            reject(res.status(200).json({err:"Tài khoản đã tồn tại"}));
         }
       }
     });
@@ -90,14 +90,12 @@ module.exports.register = (req, res) => {
       };
       docClient.put(params2, function (err, data) {
         if (err) {
-          res.status(400).send("Bad Request!!"+ err);
+          res.status(200).send(err);
         } else {
-            console.log('2 da vao put' );
-            console.log( JSON.stringify(data, null, 2))
           res.json(data);
         }
       })
-  }).catch(err=>res.status(400).send(err));
+  }).catch(err=>res.status(200).send(err));
 };
 
 const isEmpty = (v) => {

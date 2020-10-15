@@ -23,13 +23,13 @@ module.exports.login = (req, res) => {
   };
   docClient.get(params, function (err, data) {
     if (err) {
-      res.status(400).send("Bad req"+err);
+      res.status(200).json({err:err});
     } else {
       if (!isEmpty(data)) {
         if (data.Item.password === password) res.json(data);
-        else res.status(200).send("Sai tai khoan hoac mat khau");
+        else res.status(200).json({err:"Sai tài khoản hoặc mật khẩu"});
       } else {
-        res.status(200).send("Sai tai khoan hoac mat khau");
+        res.status(200).json({err:"Sai tài khoản hoặc mật khẩu"});
       }
     }
   });
