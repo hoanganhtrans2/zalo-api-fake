@@ -33,7 +33,7 @@ module.exports.updateInfo = (req, res) => {
     Key: {
       userid: id,
     },
-    UpdateExpression: "set birthday = :b, gender=:g, user_name=:u",
+    UpdateExpression: "set birthday = :b, gender=:g, username=:u",
     ExpressionAttributeValues: {
       ":b": birthday,
       ":g": gender,
@@ -68,8 +68,7 @@ module.exports.register = (req, res) => {
       } else {
         console.log(data);
         if (isEmpty(data)) {
-          resolve(res.status(200));
-          console.log('empty');
+          resolve("id đăng ký hợp lệ");
         }
         else{
             reject(res.status(200).json({err:"Tài khoản đã tồn tại"}));
@@ -85,14 +84,14 @@ module.exports.register = (req, res) => {
           password: password,
           birthday: birthday,
           gender: gender,
-          user_name: username,
+          username: username,
         },
       };
       docClient.put(params2, function (err, data) {
         if (err) {
           res.status(200).send(err);
         } else {
-          res.json(data);
+          res.json({Item: {id: id, password: password,birthday: birthday,gender: gender,username: username}});
         }
       })
   }).catch(err=>res.status(200).send(err));
