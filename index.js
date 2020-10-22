@@ -7,6 +7,8 @@ var cors = require('cors');
 const port = 3000;
 const userRoutes = require('./routes/users.routes');
 const loginRoutes = require('./routes/login.routes');
+const { request } = require('express');
+const friendRoutes = require('./routes/friend.routes');
 
 require('dotenv').config();
 app.use(bodyParser.json());
@@ -15,9 +17,9 @@ app.use(cors());
 
 app.use('/api/user', userRoutes);
 
+app.use('/api',userRoutes);
 
-app.use('/api',userRoutes);
-app.use('/api',userRoutes);
+app.use('/api/friend',friendRoutes);
 
 app.use('/api', loginRoutes);
 

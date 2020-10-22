@@ -100,3 +100,21 @@ module.exports.register = (req, res) => {
 const isEmpty = (v) => {
   return Object.keys(v).length === 0;
 };
+
+module.exports.getUserById = (req, res)=>{
+
+  id = req.params.id;
+  console.log(id)
+  var params = {
+    TableName : 'user-zalo',
+    FilterExpression : 'userid = :id',
+    ExpressionAttributeValues : {':id' : id}
+  };
+  
+  var documentClient = new AWS.DynamoDB.DocumentClient();
+  
+  documentClient.scan(params, function(err, data) {
+     if (err) res.send(err);
+     else res.json(data);
+  });
+}
