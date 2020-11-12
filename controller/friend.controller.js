@@ -19,7 +19,7 @@ module.exports.getListFriends = async (req, res) => {
     console.log(listFriends);
     const params = {
       TableName: "user-zalo",
-      AttributesToGet: ["userid", "username"],
+      AttributesToGet: ["userid", "username", "imgurl"],
       ScanFilter: {
         userid: {
           ComparisonOperator: "IN",
@@ -45,7 +45,7 @@ module.exports.getListFriendsInvitations = async (req, res) => {
     const listFriendsInvitations = await getStringSetInvitations(id);
     const params = {
       TableName: "user-zalo",
-      AttributesToGet: ["userid", "username"],
+      AttributesToGet: ["userid", "username", "imgurl"],
       ScanFilter: {
         userid: {
           ComparisonOperator: "IN",
@@ -184,7 +184,7 @@ let getStringSetInvitations = (id) => {
         reject(err);
       } else if (!data.Item.listfriendinvitations) {
         console.log(data);
-        reject({ err: "Chua co ban be" });
+        reject({ err: "Khong có lời mời kết bạn" });
       } else {
         let arr = JSON.stringify(data.Item.listfriendinvitations);
         resolve(JSON.parse(arr));
