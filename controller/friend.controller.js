@@ -19,7 +19,7 @@ module.exports.getListFriends = async (req, res) => {
     console.log(listFriends);
     const params = {
       TableName: "user-zalo",
-      AttributesToGet: ["userid", "username", "imgurl"],
+      AttributesToGet: ["userid", "username", "imgurl", "birthday", "gender"],
       ScanFilter: {
         userid: {
           ComparisonOperator: "IN",
@@ -45,7 +45,7 @@ module.exports.getListFriendsInvitations = async (req, res) => {
     const listFriendsInvitations = await getStringSetInvitations(id);
     const params = {
       TableName: "user-zalo",
-      AttributesToGet: ["userid", "username", "imgurl"],
+      AttributesToGet: ["userid", "username", "imgurl", "birthday", "gender"],
       ScanFilter: {
         userid: {
           ComparisonOperator: "IN",
