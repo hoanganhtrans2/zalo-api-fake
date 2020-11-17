@@ -85,7 +85,7 @@ module.exports.acceptFriendRequest = async (req, res) => {
       idYeuCauKetBan,
       "listfriendinvitations"
     );
-    res.status(200).json({ message: "Them ban thanh cong" });
+    res.status(200).json({ message: "Đã là bạn bè" });
   } catch (error) {
     res.send(error);
   }
@@ -115,6 +115,52 @@ module.exports.sendFriendInvitatios = async (req, res) => {
     res.json(result);
   } catch (error) {
     res.json(error);
+  }
+};
+
+module.exports.denyFriendRequest = async (req, res) => {
+  const { idYeuCauKetBan, idDongYKetBan } = req.body;
+  try {
+    let result = await deleteItemInStringSet(
+      idDongYKetBan,
+      idYeuCauKetBan,
+      "listfriendinvitations"
+    );
+    res.status(200).json({ message: "Từ chối lời mời kết bạn" });
+  } catch (error) {
+    res.json({ err: error });
+  }
+};
+
+module.exports.findUser = async (req, res) => {
+  const { id, idfind } = req.body;
+  try {
+    const listFriends = await getStringSetFriend(id);
+    console.log(listFriends);
+    if (isFriend(idfind, listFriends)) {
+      console.log("isFfriend");
+      res.status(200).json({ message: "isfriend" });
+    } else {
+      console.log("else");
+      const params = {
+        TableName: "user-zalo",
+        AttributesToGet: ["userid", "username", "imgurl", "birthday", "gender"],
+        KeyConditions: {
+          userid: {
+            ComparisonOperator: "EQ",
+            AttributeValueList: [idfind],
+          },
+        },
+      };
+      docClient.query(params, function (err, data) {
+        console.log(data);
+        if (err) res.send(err);
+        // an error occurred
+        else res.json(data); // successful response
+      });
+    }
+  } catch (error) {
+    res.json({ err: error });
   }
 };
 
@@ -244,4 +290,10 @@ let addItemToStringSet = (sender, receiver, StringSetAtt) => {
       }
     });
   });
+};
+
+let isFriend = (id, arrid) => {
+  const kp = arrid.findIndex((e) => e === id);
+  if (kp >= 0) return true;
+  return false;
 };

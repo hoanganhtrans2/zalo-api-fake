@@ -11,5 +11,7 @@ router.post(
 router.post("/acceptfriendrequest", friendController.acceptFriendRequest);
 router.post("/deletefriend", friendController.deleteFriend);
 router.post("/sendfriendinvitions", friendController.sendFriendInvitatios);
+router.post("/denyfriendrequest", friendController.denyFriendRequest);
+router.post("/finduser", friendController.findUser);
 
 module.exports = router;
