@@ -136,29 +136,29 @@ module.exports.findUser = async (req, res) => {
   const { id, idfind } = req.body;
   try {
     const listFriends = await getStringSetFriend(id);
-    console.log(listFriends);
-    if (isFriend(idfind, listFriends)) {
-      console.log("isFfriend");
-      res.status(200).json({ message: "isfriend" });
-    } else {
-      console.log("else");
-      const params = {
-        TableName: "user-zalo",
-        AttributesToGet: ["userid", "username", "imgurl", "birthday", "gender"],
-        KeyConditions: {
-          userid: {
-            ComparisonOperator: "EQ",
-            AttributeValueList: [idfind],
-          },
+    const params = {
+      TableName: "user-zalo",
+      AttributesToGet: ["userid", "username", "imgurl", "birthday", "gender"],
+      KeyConditions: {
+        userid: {
+          ComparisonOperator: "EQ",
+          AttributeValueList: [idfind],
         },
-      };
-      docClient.query(params, function (err, data) {
-        console.log(data);
-        if (err) res.send(err);
-        // an error occurred
-        else res.json(data); // successful response
-      });
-    }
+      },
+    };
+    docClient.query(params, function (err, data) {
+      console.log(data);
+      if (err) res.send(err);
+      else {
+        if (isFriend(idfind, listFriends)) {
+          data.isfriend = true;
+          console.log(data);
+          res.status(200).json(data);
+        } else {
+          res.json(data);
+        }
+      }
+    });
   } catch (error) {
     res.json({ err: error });
   }
@@ -208,7 +208,7 @@ let getStringSetFriend = (id) => {
       if (err) {
         reject(err);
       } else if (!data.Item.listfriends) {
-        reject({ err: "Chua co ban be" });
+        resolve({ message: "Chưa có bạn bè" });
       } else {
         let arr = JSON.stringify(data.Item.listfriends);
         resolve(JSON.parse(arr));
@@ -230,7 +230,7 @@ let getStringSetInvitations = (id) => {
         reject(err);
       } else if (!data.Item.listfriendinvitations) {
         console.log(data);
-        reject({ err: "Khong có lời mời kết bạn" });
+        resolve({ message: "Khong có lời mời kết bạn" });
       } else {
         let arr = JSON.stringify(data.Item.listfriendinvitations);
         resolve(JSON.parse(arr));
@@ -293,7 +293,9 @@ let addItemToStringSet = (sender, receiver, StringSetAtt) => {
 };
 
 let isFriend = (id, arrid) => {
-  const kp = arrid.findIndex((e) => e === id);
-  if (kp >= 0) return true;
+  if (Array.isArray(arrid)) {
+    const kp = arrid.findIndex((e) => e === id);
+    if (kp >= 0) return true;
+  }
   return false;
 };
